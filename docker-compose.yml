@@ -24,6 +24,7 @@ services:
     volumes:
       - letsencrypt_certs:/etc/letsencrypt
       - certbot_acme_challenge:/var/www/certbot
+      - letsencrypt_logs:/var/log/letsencrypt/
 
   cron:
     build: ./cron
@@ -34,13 +35,15 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./:/workdir:ro
     restart: unless-stopped
-    
+
 volumes:
   nginx_conf:
     external: true
   letsencrypt_certs:
     external: true
   certbot_acme_challenge:
+    external: true
+  letsencrypt_logs:
     external: true
 
 networks:

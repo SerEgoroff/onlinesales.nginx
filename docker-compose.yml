@@ -3,7 +3,7 @@ version: "2"
 services:
   nginx:
     build: ./nginx
-    image: evgeniy-khyst/nginx
+    image: https-reverse-proxy/nginx
     env_file:
       - ./config.env
     volumes:
@@ -11,7 +11,6 @@ services:
       - letsencrypt_certs:/etc/letsencrypt
       - certbot_acme_challenge:/var/www/certbot
       - ./vhosts:/etc/nginx/vhosts
-      - ./html:/var/www/html
     ports:
       - "80:80"
       - "443:443"
@@ -19,7 +18,7 @@ services:
 
   certbot:
     build: ./certbot
-    image: evgeniy-khyst/certbot
+    image: https-reverse-proxy/certbot
     env_file:
       - ./config.env
     volumes:
@@ -28,7 +27,7 @@ services:
 
   cron:
     build: ./cron
-    image: evgeniy-khyst/cron
+    image: https-reverse-proxy/cron
     environment:
       COMPOSE_PROJECT_NAME: "${COMPOSE_PROJECT_NAME}"
     volumes:
@@ -42,3 +41,8 @@ volumes:
   letsencrypt_certs:
     external: true
   certbot_acme_challenge:
+
+networks:
+  default:
+    name: onlinesales-network
+    external: true

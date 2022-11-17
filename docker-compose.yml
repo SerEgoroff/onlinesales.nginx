@@ -1,9 +1,9 @@
 version: "2"
 
 services:
-  nginx:
+  nginx_proxy:
     build: ./nginx
-    image: https-reverse-proxy/nginx
+    image: nginx_proxy
     env_file:
       - ./config.env
     volumes:
@@ -17,9 +17,9 @@ services:
       - "443:443"
     restart: unless-stopped
 
-  certbot:
+  proxy_certbot:
     build: ./certbot
-    image: https-reverse-proxy/certbot
+    image: proxy_certbot
     env_file:
       - ./config.env
     volumes:
@@ -27,11 +27,9 @@ services:
       - certbot_acme_challenge:/var/www/certbot
       - letsencrypt_logs:/var/log/letsencrypt/
 
-  cron:
+  proxy_cron:
     build: ./cron
-    image: https-reverse-proxy/cron
-    environment:
-      COMPOSE_PROJECT_NAME: "${COMPOSE_PROJECT_NAME}"
+    image: proxy_cron
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./:/workdir:ro

@@ -1,9 +1,9 @@
 version: "2"
 
 services:
-  nginx_proxy:
+  nginx:
     build: ./nginx
-    image: nginx_proxy
+    image: nginx
     env_file:
       - ./config.env
     volumes:

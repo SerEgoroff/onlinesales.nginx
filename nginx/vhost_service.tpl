@@ -1,5 +1,5 @@
 location / {
-    proxy_pass         http://kibana_waveservice_app:5601;
+    proxy_pass         ${target};
     proxy_redirect     off;
     proxy_set_header   Host $host;
     proxy_set_header   X-Real-IP $remote_addr;

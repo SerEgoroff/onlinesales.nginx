@@ -8,7 +8,7 @@ if [ -z "$DOMAINS" ]; then
 fi
 
 if [ -z "$TARGETS" ]; then
-  echo "DOMAINS environment variable is not set"
+  echo "TARGETS environment variable is not set"
   exit 1;
 fi
 

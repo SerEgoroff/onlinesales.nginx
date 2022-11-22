@@ -1,4 +1,4 @@
 location / {
-    root /var/www/html/site.waveservice.app;
+    root ${target};
     index index.html index.htm;
 }

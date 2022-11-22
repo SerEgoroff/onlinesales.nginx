@@ -6,4 +6,4 @@ COPY certbot.sh /opt/
 
 RUN chmod +x /opt/certbot.sh
 
-ENTRYPOINT ["/opt/certbot.sh"]
+ENTRYPOINT [ "/opt/certbot.sh" ]

@@ -24,5 +24,5 @@ server {
 
     include /etc/nginx/includes/hsts.conf;
 
-    include /etc/nginx/vhosts/${domain}.conf;
+    ${vhostinclude}
 }

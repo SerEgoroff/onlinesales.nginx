@@ -10,8 +10,7 @@ services:
       - nginx_conf:/etc/nginx/sites
       - static_sites:/var/www/html
       - letsencrypt_certs:/etc/letsencrypt
-      - certbot_acme_challenge:/var/www/certbot      
-      - ./vhosts:/etc/nginx/vhosts      
+      - certbot_acme_challenge:/var/www/certbot  
     ports:
       - "80:80"
       - "443:443"

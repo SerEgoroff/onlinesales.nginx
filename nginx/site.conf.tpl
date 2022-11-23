@@ -1,5 +1,5 @@
 server {
-    listen 80;
+    listen 80 http2;
     server_name ${domain};
 
     location /.well-known/acme-challenge/ {
@@ -12,7 +12,7 @@ server {
 }
 
 server {
-    listen 443 ssl;
+    listen 443 ssl http2;
     server_name ${domain};
 
     ssl_certificate /etc/nginx/sites/ssl/dummy/${domain}/fullchain.pem;

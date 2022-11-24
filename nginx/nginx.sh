@@ -67,6 +67,9 @@ do
   vHostTemplate=""
   if [ "${target:0:1}" = "/" ]; then
     vHostTemplate=$(cat /customization/vhost_static.tpl)  # begins with '/' -> path -> serve static files
+  elif [ "${target:0:1}" = ">"]; then
+    vHostTemplate=$(cat /customization/vhost_redirect.tpl)  # begins with '>' -> temporary redirect (HTTP 302)
+    target="${target:1}"                                    # remove '>' character
   else
     vHostTemplate=$(cat /customization/vhost_service.tpl) # else - serve service
   fi

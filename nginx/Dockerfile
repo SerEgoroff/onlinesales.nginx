@@ -8,6 +8,7 @@ COPY gzip.conf options-ssl-nginx.conf hsts.conf /etc/nginx/includes/
 COPY site.conf.tpl /customization/
 COPY vhost_service.tpl /customization/
 COPY vhost_static.tpl /customization/
+COPY vhost_redirect.tpl /customization/
 COPY nginx.sh /customization/
 
 RUN chmod +x /customization/nginx.sh

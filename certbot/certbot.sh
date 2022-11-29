@@ -28,6 +28,7 @@ do
 
   if [ -d "/etc/letsencrypt/live/$domain" ]; then
     echo "Let's Encrypt certificate for $domain already exists"
+    i=$((i+1))
     continue
   fi
 

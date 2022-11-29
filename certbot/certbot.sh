@@ -4,11 +4,6 @@ set -e
 
 trap exit INT TERM
 
-if [ -z "$DOMAINS" ]; then
-  echo "DOMAINS environment variable is not set"
-  exit 1;
-fi
-
 until nc -z nginx 80; do
   echo "Waiting for nginx to start..."
   sleep 5s & wait ${!}
@@ -18,12 +13,16 @@ if [ "$CERTBOT_TEST_CERT" != "0" ]; then
   test_cert_arg="--test-cert"
 fi
 
-domains_fixed=$(echo "$DOMAINS" | tr -d \")
-domain_list=($domains_fixed)
-emails_fixed=$(echo "$CERTBOT_EMAILS" | tr -d \")
-emails_list=($emails_fixed)
-for i in "${!domain_list[@]}"; do
-  domain="${domain_list[i]}"
+i=1
+while true
+do
+  # Need to set DOMAIN_[...] , CERTBOTEMAIL_[...]
+  # loop unit reach end of DOMAIN_[1,2,3,4]
+  if [[ -z $(eval "echo \${DOMAIN_$i}") ]]; then
+    break
+  else
+    domain=$(eval "echo \${DOMAIN_$i}")
+  fi
 
   mkdir -p "/var/www/certbot/$domain"
 
@@ -32,15 +31,14 @@ for i in "${!domain_list[@]}"; do
     continue
   fi
 
-  email="${emails_list[i]}"
-  if [ -z "$email" ]; then
+  if [[ -z $(eval "echo \${CERTBOTEMAIL_$i}") ]]; then
     email_arg="--register-unsafely-without-email"
     echo "Obtaining the certificate for $domain without email"
   else
+    email=$(eval "echo \${CERTBOTEMAIL_$i}")
     email_arg="--email $email"
     echo "Obtaining the certificate for $domain with email $email"
   fi
-
   certbot certonly \
     --webroot \
     -w "/var/www/certbot/$domain" \
@@ -51,4 +49,6 @@ for i in "${!domain_list[@]}"; do
     --agree-tos \
     --noninteractive \
     --verbose || true
+
+i=$((i+1))
 done

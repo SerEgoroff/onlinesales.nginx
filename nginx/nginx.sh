@@ -30,6 +30,13 @@ wait_for_lets_encrypt() {
   reload_nginx
 }
 
+  if [[ -z $(eval "echo \${NGINX_UPLOADSIZE_MAX}") ]]; then
+    maxUploadSize='1M'
+    break
+  else
+    maxUploadSize=$(eval "echo \${NGINX_UPLOADSIZE_MAX}")
+  fi
+
 if [ ! -f /etc/nginx/sites/ssl/ssl-dhparams.pem ]; then
   mkdir -p "/etc/nginx/sites/ssl"
   openssl dhparam -out /etc/nginx/sites/ssl/ssl-dhparams.pem 2048
@@ -62,6 +69,7 @@ do
     vHostTemplate=$(cat /customization/vhost_service.tpl) # else - serve service
   fi
   vHostTemplate=$(echo "${vHostTemplate//\$\{target\}/"$domainTarget"}")
+  vHostTemplate=$(echo "${vHostTemplate//\$\{maxUploadSize\}/"$maxUploadSize"}")
 
   if [ ! -f "/etc/nginx/sites/$domain.conf" ]; then
     echo "Creating Nginx configuration file /etc/nginx/sites/$domain.conf"

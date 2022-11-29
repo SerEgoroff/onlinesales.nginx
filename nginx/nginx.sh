@@ -57,11 +57,11 @@ do
     vHostTemplate=$(cat /customization/vhost_static.tpl)  # begins with '/' -> path -> serve static files
   elif [ "${domainTarget:0:1}" = ">" ]; then
     vHostTemplate=$(cat /customization/vhost_redirect.tpl)  # begins with '>' -> temporary redirect (HTTP 302)
-    target="${domainTarget:1}"                                    # remove '>' character
+    domainTarget="${domainTarget:1}"                                    # remove '>' character
   else
     vHostTemplate=$(cat /customization/vhost_service.tpl) # else - serve service
   fi
-  vHostTemplate=$(echo "${vHostTemplate//\$\{domainTarget\}/"$domainTarget"}")
+  vHostTemplate=$(echo "${vHostTemplate//\$\{target\}/"$domainTarget"}")
 
   if [ ! -f "/etc/nginx/sites/$domain.conf" ]; then
     echo "Creating Nginx configuration file /etc/nginx/sites/$domain.conf"

@@ -68,6 +68,14 @@ do
   else
     vHostTemplate=$(cat /customization/vhost_service.tpl) # else - serve service
   fi
+  
+  IFS=' '
+  corsDomains=$(eval "echo \${CORSALLOWEDORIGIN_$i}")
+  corsDomainInsert=''
+  for corsDomain in $corsDomains; do
+    corsDomainInsert="${corsDomainInsert} add_header 'Access-Control-Allow-Origin' '"${corsDomain}"';"
+  done
+  vHostTemplate=$(echo "${vHostTemplate//\$\{corsAllowedOrigin\}/"$corsDomainInsert"}")
   vHostTemplate=$(echo "${vHostTemplate//\$\{target\}/"$domainTarget"}")
   vHostTemplate=$(echo "${vHostTemplate//\$\{maxUploadSize\}/"$maxUploadSize"}")
 

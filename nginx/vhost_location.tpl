@@ -1,5 +1,6 @@
-location / {
-    proxy_pass         ${target};
+location  /${location} {
+    rewrite /${location}/(.*) /$1  break;
+    proxy_pass         ${locationTarget};
     proxy_redirect     off;
     proxy_set_header   Host $host;
     proxy_set_header   X-Real-IP $remote_addr;
@@ -36,5 +37,3 @@ location / {
         add_header 'Access-Control-Expose-Headers' 'Content-Length,Content-Range' always;
     }
 }
-
-${locationTemplatePlaceholder}

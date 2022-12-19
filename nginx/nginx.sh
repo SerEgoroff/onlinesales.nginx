@@ -78,6 +78,36 @@ do
   vHostTemplate=$(echo "${vHostTemplate//\$\{corsAllowedOrigin\}/"$corsDomainInsert"}")
   vHostTemplate=$(echo "${vHostTemplate//\$\{target\}/"$domainTarget"}")
   vHostTemplate=$(echo "${vHostTemplate//\$\{maxUploadSize\}/"$maxUploadSize"}")
+  vHostLocationTemplate=""
+
+  i_location=1
+  while true 
+  do
+    # Need to set DOMAIN_[...]_LOCATION_[...] , DOMAIN_[...]_LOCATION_[...]_TARGET
+    # loop unit reach end of DOMAIN_[...]_LOCATION_[1,2,3,4]
+    if [[ -z $(eval "echo \${DOMAIN_${i}_LOCATION_${i_location}}") ]]; then
+      break
+    else
+      domainLocation=$(eval "echo \${DOMAIN_${i}_LOCATION_${i_location}}")
+    fi
+    if [[ -z $(eval "echo \${DOMAIN_${i}_LOCATION_${i_location}_TARGET}") ]]; then
+      echo 'Error: Failed to construct nginx configuration files. DOMAINTARGET_${i} not found'
+      break
+    else
+      domainLocationTarget=$(eval "echo \${DOMAIN_${i}_LOCATION_${i_location}_TARGET}")
+    fi
+
+    vHostLocation=$(cat /customization/vhost_location.tpl)
+    vHostLocation=$(echo "${vHostLocation//\$\{location\}/"$domainLocation"}")
+    vHostLocation=$(echo "${vHostLocation//\$\{locationTarget\}/"$domainLocationTarget"}")
+    vHostLocation=$(echo "${vHostLocation//\$\{maxUploadSize\}/"$maxUploadSize"}")
+    vHostLocation=$(echo "${vHostLocation//\$\{corsAllowedOrigin\}/"$corsDomainInsert"}")
+    vHostLocationTemplate="${vHostLocationTemplate} ${vHostLocation}"
+
+    i_location=$((i_location+1))
+  done
+  vHostTemplate=$(echo "${vHostTemplate//\$\{locationTemplatePlaceholder\}/"$vHostLocationTemplate"}")
+
 
   if [ ! -f "/etc/nginx/sites/$domain.conf" ]; then
     echo "Creating Nginx configuration file /etc/nginx/sites/$domain.conf"

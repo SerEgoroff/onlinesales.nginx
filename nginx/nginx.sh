@@ -70,12 +70,6 @@ do
   fi
   
   IFS=' '
-  corsDomains=$(eval "echo \${CORSALLOWEDORIGIN_$i}")
-  corsDomainInsert=''
-  for corsDomain in $corsDomains; do
-    corsDomainInsert="${corsDomainInsert} add_header 'Access-Control-Allow-Origin' '"${corsDomain}"';"
-  done
-  vHostTemplate=$(echo "${vHostTemplate//\$\{corsAllowedOrigin\}/"$corsDomainInsert"}")
   vHostTemplate=$(echo "${vHostTemplate//\$\{target\}/"$domainTarget"}")
   vHostTemplate=$(echo "${vHostTemplate//\$\{maxUploadSize\}/"$maxUploadSize"}")
   vHostLocationTemplate=""
@@ -101,7 +95,6 @@ do
     vHostLocation=$(echo "${vHostLocation//\$\{location\}/"$domainLocation"}")
     vHostLocation=$(echo "${vHostLocation//\$\{locationTarget\}/"$domainLocationTarget"}")
     vHostLocation=$(echo "${vHostLocation//\$\{maxUploadSize\}/"$maxUploadSize"}")
-    vHostLocation=$(echo "${vHostLocation//\$\{corsAllowedOrigin\}/"$corsDomainInsert"}")
     vHostLocationTemplate="${vHostLocationTemplate} ${vHostLocation}"
 
     i_location=$((i_location+1))

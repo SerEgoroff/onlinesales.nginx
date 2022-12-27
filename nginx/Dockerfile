@@ -15,5 +15,6 @@ COPY nginx.sh /customization/
 RUN chmod +x /customization/nginx.sh
 
 EXPOSE 80
+EXPOSE 443
 
 CMD ["/customization/nginx.sh"]

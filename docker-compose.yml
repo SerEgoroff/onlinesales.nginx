@@ -1,4 +1,4 @@
-version: "2"
+version: "3.7"
 
 services:
   nginx:
@@ -7,10 +7,9 @@ services:
     env_file:
       - ./config.env
     volumes:
-      - nginx_conf:/etc/nginx/sites
       - static_sites:/var/www/html
       - letsencrypt_certs:/etc/letsencrypt
-      - certbot_acme_challenge:/var/www/certbot  
+      - certbot_acme_challenge:/var/www/certbot
     ports:
       - "80:80"
       - "443:443"
@@ -24,7 +23,6 @@ services:
     volumes:
       - letsencrypt_certs:/etc/letsencrypt
       - certbot_acme_challenge:/var/www/certbot
-      - letsencrypt_logs:/var/log/letsencrypt/
 
   proxy_cron:
     build: ./cron
@@ -35,14 +33,8 @@ services:
     restart: unless-stopped
 
 volumes:
-  nginx_conf:
-    external: true
   letsencrypt_certs:
-    external: true
   certbot_acme_challenge:
-    external: true
-  letsencrypt_logs:
-    external: true
   static_sites:
     external: true
 

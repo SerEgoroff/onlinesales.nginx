@@ -58,6 +58,11 @@ do
   else
     domainTarget=$(eval "echo \${DOMAINTARGET_$i}")
   fi
+  if [[ -z $(eval "echo \${DOMAINTARGETINDEX_$i}") ]]; then
+    domainTargetIndex="index.html"
+  else
+    domainTarget=$(eval "echo \${DOMAINTARGET_$i}")
+  fi
 
   vHostTemplate=""
   if [ "${domainTarget:0:1}" = "/" ]; then
@@ -71,6 +76,7 @@ do
   
   IFS=' '
   vHostTemplate=$(echo "${vHostTemplate//\$\{target\}/"$domainTarget"}")
+  vHostTemplate=$(echo "${vHostTemplate//\$\{index\}/"$domainTargetIndex"}")
   vHostTemplate=$(echo "${vHostTemplate//\$\{maxUploadSize\}/"$maxUploadSize"}")
   vHostLocationTemplate=""
 
@@ -90,11 +96,21 @@ do
     else
       domainLocationTarget=$(eval "echo \${DOMAIN_${i}_LOCATION_${i_location}_TARGET}")
     fi
+    if [[ -z $(eval "echo \${DOMAIN_${i}_LOCATION_${i_location}_INDEX}") ]]; then
+      domainTargetIndex="index.html"
+    else
+      domainTargetIndex=$(eval "echo \${DOMAIN_${i}_LOCATION_${i_location}_INDEX}")
+    fi
 
-    vHostLocation=$(cat /customization/vhost_location.tpl)
+    if [ "${domainLocationTarget:0:1}" = "/" ]; then
+      vHostLocation=$(cat /customization/vhost_location_static.tpl)  # begins with '/' -> path -> serve static files
+    else
+      vHostLocation=$(cat /customization/vhost_location.tpl) # else - serve service
+    fi
     vHostLocation=$(echo "${vHostLocation//\$\{location\}/"$domainLocation"}")
     vHostLocation=$(echo "${vHostLocation//\$\{locationTarget\}/"$domainLocationTarget"}")
     vHostLocation=$(echo "${vHostLocation//\$\{maxUploadSize\}/"$maxUploadSize"}")
+    vHostLocation=$(echo "${vHostLocation//\$\{index\}/"$domainTargetIndex"}")
     vHostLocationTemplate="${vHostLocationTemplate} ${vHostLocation}"
 
     i_location=$((i_location+1))

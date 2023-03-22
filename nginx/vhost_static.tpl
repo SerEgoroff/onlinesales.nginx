@@ -1,6 +1,6 @@
 location / {
     root ${target};
-    index index.html index.htm;
+    index ${index};
 }
 
 ${locationTemplatePlaceholder}

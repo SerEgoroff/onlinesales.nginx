@@ -44,3 +44,4 @@ networks:
   default:
     name: onlinesales-network
     external: true
+    

@@ -1,3 +1,4 @@
 .env
 .vs/
 config.env
+docker-compose.yml

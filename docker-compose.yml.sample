@@ -42,6 +42,6 @@ volumes:
 
 networks:
   default:
-    name: onlinesales-network
+    name: salespro-network
     external: true
     
